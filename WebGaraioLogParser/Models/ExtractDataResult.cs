@@ -9,5 +9,6 @@ namespace WebGaraioLogParser.Models
     {
         public bool Success { get; set; } = false;
         public string Message { get; set; } = string.Empty;
+        public string JsonData { get; set; } = string.Empty;
     }
 }

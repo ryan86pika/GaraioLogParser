@@ -77,5 +77,21 @@ namespace WebGaraioLogParser.Utils
             }
             return rslt;
         }
+
+        public static bool CleanUploadedFolder(string path)
+        {
+            try
+            {
+                var uploadedFolder = new DirectoryInfo(path);
+                if (!uploadedFolder.Exists) return true;
+                foreach (FileInfo file in uploadedFolder.GetFiles()) file.Delete();
+                foreach (DirectoryInfo dir in uploadedFolder.GetDirectories()) dir.Delete(true);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

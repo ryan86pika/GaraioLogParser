@@ -21,6 +21,13 @@ namespace WebGaraioLogParser
             );
 
             routes.MapRoute(
+                name: "InitializeUploadingSystem",
+                url: "{controller}/{action}/{id}",
+                defaults: new
+                { controller = "Upload", action = "InitializeUploadingSystem", id = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
                 name: "MergeFilesUploadedIntoSingleFile",
                 url: "{controller}/{action}/{id}",
                 defaults: new

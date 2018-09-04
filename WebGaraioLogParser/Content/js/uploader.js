@@ -10,27 +10,19 @@ String.prototype.compose = (function () {
 
 $(document).ready(function () {
 
-    var dataFile = $('#dataFile')[0];
-    var resultData = $("#result_data");
-    var label = $('#btnUpload')[0].nextElementSibling;
-
     $('#btnUpload').click(function () {
-        if (dataFile.files != null && dataFile.files.length > 0) {
-			label.innerHTML = 'Start uploading file...';
-            UploadFile(dataFile.files);
-        } else {
-            resultData.html('');
-            label.innerHTML = '';
-        }
+        if (HasUserChoosedFile()) InitializeUploadingSystem();
+        else CleanFormData();
     });
 
     SwitchTitleIntoInput();
-
 });
 
 function SwitchTitleIntoInput() {
+    var dataFile = $('#dataFile')[0];
+
     var label = dataFile.nextElementSibling;
-	var labelVal = label.innerHTML;
+    var labelVal = label.innerHTML;
 
     // write filename into label if was selected otherwise reset the label
 	dataFile.addEventListener('change', function (e) {
@@ -45,6 +37,37 @@ function SwitchTitleIntoInput() {
     // Firefox bug fix
     dataFile.addEventListener('focus', function () { dataFile.classList.add('has-focus'); });
     dataFile.addEventListener('blur', function () { dataFile.classList.remove('has-focus'); });
+}
+
+function CleanFormData() {
+    var resultData = $("#result_data");
+    var label = $('#btnUpload')[0].nextElementSibling;
+
+    resultData.html('');
+    label.innerHTML = '';
+}
+
+function HasUserChoosedFile() {
+    return $('#dataFile') != null && $('#dataFile').length > 0 && $('#dataFile')[0].files != null && $('#dataFile')[0].files.length > 0;
+}
+
+function InitializeUploadingSystem() {
+    $.ajax({
+        type: "POST",
+        url: UrlSettings.InitializeUploadingSystem,
+        success: function (data) {
+            var dataFile = $('#dataFile')[0];
+            var label = $('#btnUpload')[0].nextElementSibling;
+            if (typeof data.Message !== "undefined") label.innerHTML = data.Message;
+            else label.innerHTML = "Start uploading file...";
+            UploadFile(dataFile.files);
+        },
+        error: function (jqXHR) {
+            var label = $('#btnUpload')[0].nextElementSibling;
+            if (typeof jqXHR.statusText !== "undefined" && typeof jqXHR.statusText != '') label.innerHTML = jqXHR.statusText;
+            else label.innerHTML = "The uploaded folder has not be cleaned!";
+        }
+    });
 }
 
 function UploadFile(TargetFile) {
@@ -95,13 +118,18 @@ function UploadFileChunk(Chunk, FileName) {
         data: FD,
         success: function (data) {
             var label = $('#btnUpload')[0].nextElementSibling;
-            if (typeof data.BaseFileName !== "undefined") {
-                label.innerHTML = "File Uploaded! Start parsing...";
-                CallGetDataIntoJSON(data.BaseFileName);
-            } else if (typeof data.Chunk !== "undefined" && typeof data.MaxChunks !== "undefined") {
-                label.innerHTML = "Uploaded chunk n. " + data.Chunk + "/" + data.MaxChunks + "!";
+            if (typeof data.BaseFileName !== "undefined" && typeof data.Chunk !== "undefined" && typeof data.MaxChunks !== "undefined") {
+                if (data.BaseFileName != "") {
+                    if (typeof data.Message !== "undefined") label.innerHTML = data.Message + " Start parsing...";
+                    else label.innerHTML = "File Uploaded! Start parsing...";
+                    CallGetDataIntoJSON(data.BaseFileName);
+                } else { // data.Chunk <= data.MaxChunks
+                    if (typeof data.Message !== "undefined") label.innerHTML = data.Message;
+                    else label.innerHTML = "Uploaded chunk n. " + data.Chunk + "/" + data.MaxChunks + "!";
+                }
             } else {
                 label.innerHTML = "Unsupported results!";
+                if (typeof data.Message !== "undefined") label.innerHTML += " " + data.Message;
             }
         },
         error: function (jqXHR) {
@@ -122,7 +150,8 @@ function CallGetDataIntoJSON(messageText) {
         data: { baseFileName: messageText },
         success: function (data) {
             var label = $('#btnUpload')[0].nextElementSibling;
-            label.innerHTML = "File uploaded and parsed!";
+            if (typeof data.Message !== "undefined") label.innerHTML = data.Message;
+            else label.innerHTML = "File uploaded and parsed!";
             PrintDataIntoTable(data);
         },
         error: function (jqXHR) {
@@ -162,7 +191,7 @@ function PrintDataIntoTable(data) {
                     '<td>{{nCalls}}</td>' +
               '</tr>';
 
-    $.each(JSON.parse(data.Message), function (i, client) {
+    $.each(JSON.parse(data.JsonData), function (i, client) {
         var fqdns = '';
 
         $.each(client.FQDNs, function (j, fqdn) {

@@ -117,7 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="FileFormatNotSupported" xml:space="preserve">
+    <value>This file format is not supported</value>
+  </data>
+  <data name="FileUploadedAndParsedSuccessfully" xml:space="preserve">
+    <value>File uploaded and parsed!</value>
+  </data>
+  <data name="FileUploadedSuccessfully" xml:space="preserve">
+    <value>File uploaded successfully!</value>
+  </data>
   <data name="LoadMergedFile" xml:space="preserve">
     <value>Error during merging files</value>
+  </data>
+  <data name="ParsingFailed" xml:space="preserve">
+    <value>File parsing failed!! {0}</value>
+  </data>
+  <data name="SelectionFile" xml:space="preserve">
+    <value>Please Upload Your file</value>
+  </data>
+  <data name="StartUploadingFile" xml:space="preserve">
+    <value>Start uploading file...</value>
+  </data>
+  <data name="UploadChunkOfNChunck" xml:space="preserve">
+    <value>Uploaded chunk n. {0}/{1}!</value>
+  </data>
+  <data name="UploadedFolderNotCleaned" xml:space="preserve">
+    <value>The uploaded folder has not be cleaned!</value>
+  </data>
+  <data name="UploadingFileFailed" xml:space="preserve">
+    <value>Error during uploading file! {0}</value>
   </data>
 </root>

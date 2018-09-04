@@ -46,18 +46,30 @@ namespace GaraioLogParser.Tests.Controllers
             var controller = new UploadController();
 
             var file = new FileInfo("Logs/IISLog.log");
-            var fileName = file.Name + FileUtils.PART_TOKEN + "1.1";
-            var fakeFileKeys = new List<string> { fileName };
+
+            int maxCountFile = 1000;
+
+            var fileName = string.Empty;
+            var fakeFileKeys = new List<string>();
+
+            for (int i = 1; i <= maxCountFile; i++)
+            {
+                fileName = file.Name + FileUtils.PART_TOKEN + i + "." + maxCountFile;
+
+                fakedFile = new Mock<HttpPostedFileBase>();
+                fakedFile.Setup(f => f.InputStream).Returns(file.OpenRead);
+                fakedFile.Setup(f => f.ContentLength).Returns(8192);
+                fakedFile.Setup(f => f.FileName).Returns(fileName);
+
+                fackedFiles.Setup(x => x[fileName]).Returns(fakedFile.Object);
+
+                fakeFileKeys.Add(fileName);
+            }
 
             fackedServer.Setup(s => s.MapPath(It.IsAny<string>())).Returns(@"c:\TmpLogUploaderFolder");
 
-            fakedFile.Setup(x => x.InputStream).Returns(file.OpenRead);
-            fakedFile.Setup(f => f.ContentLength).Returns(8192);
-            fakedFile.Setup(f => f.FileName).Returns(fileName);
-
-            fackedFiles.Setup(x => x[fileName]).Returns(fakedFile.Object);
             fackedFiles.Setup(keys => keys.GetEnumerator()).Returns(fakeFileKeys.GetEnumerator());
-            fackedFiles.Setup(x => x.Count).Returns(1);
+            fackedFiles.Setup(x => x.Count).Returns(fakeFileKeys.Count);
 
             fackedRequest.Setup(x => x.Files).Returns(fackedFiles.Object);
 
@@ -66,12 +78,20 @@ namespace GaraioLogParser.Tests.Controllers
             controller.ControllerContext = new ControllerContext(fackedContext.Object, new RouteData(), controller);
 
             // Act
-            JsonResult result = controller.MergeFilesUploadedIntoSingleFile() as JsonResult;
+            JsonResult result = null;
+
+            do {
+                result = controller.MergeFilesUploadedIntoSingleFile() as JsonResult;
+
+                // Assert
+                Assert.IsNotNull(result);
+                Assert.IsNotNull(result.Data);
+                Assert.IsInstanceOfType(result.Data, typeof(MergeFileResult));
+                Assert.IsTrue(Chunk > 0);
+                Assert.IsTrue(MaxChunks > 0);
+            } while (result?.Data is MergeFileResult && string.IsNullOrEmpty((result.Data as MergeFileResult).BaseFileName));
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.IsNotNull(result.Data);
-            Assert.IsInstanceOfType(result.Data, typeof(MergeFileResult));
             Assert.IsFalse(string.IsNullOrEmpty((result.Data as MergeFileResult).BaseFileName));
         }
     }

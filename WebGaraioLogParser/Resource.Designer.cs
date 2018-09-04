@@ -61,11 +61,92 @@ namespace WebGaraioLogParser {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This file format is not supported.
+        /// </summary>
+        internal static string FileFormatNotSupported {
+            get {
+                return ResourceManager.GetString("FileFormatNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File uploaded and parsed!.
+        /// </summary>
+        internal static string FileUploadedAndParsedSuccessfully {
+            get {
+                return ResourceManager.GetString("FileUploadedAndParsedSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File uploaded successfully!.
+        /// </summary>
+        internal static string FileUploadedSuccessfully {
+            get {
+                return ResourceManager.GetString("FileUploadedSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error during merging files.
         /// </summary>
         internal static string LoadMergedFile {
             get {
                 return ResourceManager.GetString("LoadMergedFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File parsing failed!! {0}.
+        /// </summary>
+        internal static string ParsingFailed {
+            get {
+                return ResourceManager.GetString("ParsingFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please Upload Your file.
+        /// </summary>
+        internal static string SelectionFile {
+            get {
+                return ResourceManager.GetString("SelectionFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start uploading file....
+        /// </summary>
+        internal static string StartUploadingFile {
+            get {
+                return ResourceManager.GetString("StartUploadingFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uploaded chunk n. {0}/{1}!.
+        /// </summary>
+        internal static string UploadChunkOfNChunck {
+            get {
+                return ResourceManager.GetString("UploadChunkOfNChunck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The uploaded folder has not be cleaned!.
+        /// </summary>
+        internal static string UploadedFolderNotCleaned {
+            get {
+                return ResourceManager.GetString("UploadedFolderNotCleaned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error during uploading file! {0}.
+        /// </summary>
+        internal static string UploadingFileFailed {
+            get {
+                return ResourceManager.GetString("UploadingFileFailed", resourceCulture);
             }
         }
     }
