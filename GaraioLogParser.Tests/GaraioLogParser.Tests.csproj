@@ -101,9 +101,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\UploadControllerTest.cs" />
     <Compile Include="LogParser\IISLogParserTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Controllers\UploadControllerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />
@@ -120,7 +120,7 @@
       <Name>GaraioLogParser</Name>
     </ProjectReference>
     <ProjectReference Include="..\WebGaraioLogParser\WebGaraioLogParser.csproj">
-      <Project>{A3089E8C-406C-46A7-8C1C-2EB2AD160EF0}</Project>
+      <Project>{a3089e8c-406c-46a7-8c1c-2eb2ad160ef0}</Project>
       <Name>WebGaraioLogParser</Name>
     </ProjectReference>
   </ItemGroup>

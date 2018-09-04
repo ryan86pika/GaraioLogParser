@@ -2,6 +2,7 @@
 using Moq;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -78,21 +79,26 @@ namespace GaraioLogParser.Tests.Controllers
             controller.ControllerContext = new ControllerContext(fackedContext.Object, new RouteData(), controller);
 
             // Act
-            JsonResult result = null;
+            ActionResult result = controller.InitializeUploadingSystem();
 
-            do {
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(HttpStatusCodeResult));
+            Assert.IsTrue((result as HttpStatusCodeResult).StatusCode == 200);
+
+            do
+            {
                 result = controller.MergeFilesUploadedIntoSingleFile() as JsonResult;
 
                 // Assert
                 Assert.IsNotNull(result);
-                Assert.IsNotNull(result.Data);
-                Assert.IsInstanceOfType(result.Data, typeof(MergeFileResult));
-                Assert.IsTrue(Chunk > 0);
-                Assert.IsTrue(MaxChunks > 0);
-            } while (result?.Data is MergeFileResult && string.IsNullOrEmpty((result.Data as MergeFileResult).BaseFileName));
+                Assert.IsNotNull((result as JsonResult)?.Data);
+                Assert.IsInstanceOfType((result as JsonResult).Data, typeof(MergeFileResult));
+                Assert.IsTrue(((result as JsonResult).Data as MergeFileResult).Chunk > 0);
+                Assert.IsTrue(((result as JsonResult).Data as MergeFileResult).MaxChunks > 0);
+            } while ((result as JsonResult)?.Data is MergeFileResult && string.IsNullOrEmpty(((result as JsonResult).Data as MergeFileResult).BaseFileName));
 
             // Assert
-            Assert.IsFalse(string.IsNullOrEmpty((result.Data as MergeFileResult).BaseFileName));
+            Assert.IsFalse(string.IsNullOrEmpty(((result as JsonResult).Data as MergeFileResult).BaseFileName));
         }
     }
 }
